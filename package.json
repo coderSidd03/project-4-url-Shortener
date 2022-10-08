@@ -1,0 +1,31 @@
+{
+  "name": "project-4-url-shortener",
+  "version": "1.0.0",
+  "description": "project on url shortener",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node src/index.js",
+    "start": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coderSidd03/project-4-url-Shortener.git"
+  },
+  "author": "soumyadeep chakraborty",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coderSidd03/project-4-url-Shortener/issues"
+  },
+  "homepage": "https://github.com/coderSidd03/project-4-url-Shortener#readme",
+  "dependencies": {
+    "axios": "^1.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "moment": "^2.29.4",
+    "mongoose": "^6.6.5",
+    "nodemon": "^2.0.20",
+    "redis": "^3.1.2",
+    "shortid": "^2.2.16"
+  }
+}
