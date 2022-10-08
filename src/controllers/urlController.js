@@ -21,7 +21,6 @@ const createShortUrl = async (req, res) => {
         // >>>> invalid format of longUrl(not non-empty string) ==============================================//
         if (!checkString(longUrl)) return res.status(400).send({ status: false, message: "longUrl format is not valid" });
 
-
         // >>>> checking data present in cache (we've used redis) =============================================//
         const cachedData = await GET_ASYNC(`${longUrl}`)
         if (cachedData) return res.status(200).send({ status: true, message: "data from cache..", data: JSON.parse(cachedData) })
@@ -39,13 +38,12 @@ const createShortUrl = async (req, res) => {
 
         if (correctLink == false) return res.status(400).send({ status: false, message: `provided url: ${longUrl} in not live(working) till now !!!!` });
 
-
         // >>>> if data already in db =========================================================================//
         const isUrlPresent = await urlModel.findOne({ longUrl: longUrl }).select({ longUrl: 1, shortUrl: 1, urlCode: 1, _id: 0 })
 
         if (isUrlPresent) {
             //x=== converting JS object to JSON string then store or set URL data in cache memory ==x//
-            await SET_ASYNC(`${longUrl}`, JSON.stringify(duplicateUrl), `EX`, 60 * 10)
+            await SET_ASYNC(`${longUrl}`, JSON.stringify(isUrlPresent), `EX`, 60 * 10)
             return res.status(200).send({ status: true, msg: "longUrl already exists in DB", data: isUrlPresent })
         }
 
@@ -53,7 +51,7 @@ const createShortUrl = async (req, res) => {
         const baseUrl = "http://localhost:3000/";
         body.urlCode = shortId.generate().toLowerCase();
         body.shortUrl = `${baseUrl}${body.urlCode}`;
-        console.log(shortUrl);
+        // console.log(shortUrl);
 
         // >>>> creating data ================================================================================//
         const createData = await urlModel.create(body)
@@ -73,15 +71,13 @@ const createShortUrl = async (req, res) => {
     }
 }
 
-
-
-//================================== redirecting to the longurl ====================================<<< /:urlCode >>>//
+//================================== redirecting to the longUrl ====================================<<< /:urlCode >>>//
 const redirectUrl = async function (req, res) {
     try {
         const urlCode = req.params.urlCode;
 
         // >>>> invalid urlCode ==========================================================================//
-        if (!shortId.checkString(urlCode)) return res.status(400).send({ status: false, message: `Invalid urlCode: ${urlCode} provided` })
+        if (!shortId.isValid(urlCode)) return res.status(400).send({ status: false, message: `Invalid urlCode: ${urlCode} provided` })
 
         // >>>> redirecting using cache (if data present in cache) =======================================//
         let cachedURLCode = await GET_ASYNC(`${urlCode}`)

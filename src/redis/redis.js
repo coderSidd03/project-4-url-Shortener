@@ -14,6 +14,7 @@ redisClient.auth("jaddtc8S5ZUESl9zEEPNVS2soOVSFykk", (err) => {
         console.log(err)
     };
 });                                                                                                 // authentication of password
+
 redisClient.on("connect", async () => { console.log(">> Connected to Redis.."); });                 // port listener
 
 
